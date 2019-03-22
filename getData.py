@@ -21,18 +21,19 @@ parser.add_argument('--cat', help='object category', type=str)
 args = parser.parse_args()
 cat = args.cat.lower()
 
+# create a data frame that contains only the required category
 cat_id = df1[df1.Category.str.contains(cat)].LabelName.values[0]
 cat_df = df2[df2.LabelName==cat_id]
 print('Number of pictures for this category:', cat_df.ImageID.nunique())
-
+# store only, centre of image and width, heigtht along with image Id
 cat_df['x_c'] = cat_df[['XMin', 'XMax']].mean(axis=1)
 cat_df['y_c'] = cat_df[['YMin', 'YMax']].mean(axis=1)
 cat_df['w'] = cat_df.XMax - cat_df.XMin
 cat_df['h'] = cat_df.YMax - cat_df.YMin
 cat_df = cat_df[['ImageID', 'x_c', 'y_c', 'w', 'h']]
 
+# get unique images
 u_images = cat_df.ImageID.unique()
-
 s3_cmd = 'aws s3 --no-sign-request --only-show-errors cp s3://open-images-dataset/train/'
 
 for i in range(min(len(u_images), MAX_IMAGES)):
@@ -41,7 +42,7 @@ for i in range(min(len(u_images), MAX_IMAGES)):
     dwnld_cmd = s3_cmd +  img_name + IMAGE_FOLDER + img_name
     subprocess.run(dwnld_cmd.split())
 
-    # write down dimensions of object within image
+    # write down dimensions of object within image to labels folder
     dims = cat_df[cat_df.ImageID==u_images[i]].drop('ImageID', axis=1)
     with open(LABEL_FOLDER+u_images[i]+'.txt','w') as f:
         for row in dims.values:
