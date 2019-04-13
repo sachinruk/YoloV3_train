@@ -7,6 +7,11 @@ while getopts ":o:" opt; do
   esac
 done
 
+# download the csv image file descriptions
+mkdir data/
+wget -P ./data/ https://storage.googleapis.com/openimages/2018_04/class-descriptions-boxable.csv
+wget -P ./data/ https://storage.googleapis.com/openimages/2018_04/train/train-annotations-bbox.csv
+
 CAT_DIR=$PWD
 mkdir weights # to store weights as training progresses
 # create class names file
