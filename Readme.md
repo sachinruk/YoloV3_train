@@ -9,3 +9,5 @@ This script downloads darknet and trains for *one* particular class. This script
 4. Enter the password that is stated on the `run.sh` file (please change the default) and open up a terminal in jupyter notebooks.
 5. Run `bash train.sh -o snowman` for a snowman detector. All valid object types are listed under `categories.txt`.
 
+## Acknowledgement
+Much of this code has been adapted from the blog post from learnopencv: https://www.learnopencv.com/training-yolov3-deep-learning-based-custom-object-detector/
